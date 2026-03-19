@@ -1,0 +1,23 @@
+{
+  "name": "dgi-analyzer",
+  "private": true,
+  "workspaces": [
+    "packages/electron",
+    "packages/backend",
+    "packages/frontend",
+    "packages/shared"
+  ],
+  "scripts": {
+    "dev":        "concurrently \"yarn workspace backend dev\" \"yarn workspace frontend dev\" \"yarn workspace electron dev\"",
+    "build":      "yarn workspace shared build && yarn workspace backend build && yarn workspace frontend build && yarn workspace electron build",
+    "db:migrate": "yarn workspace backend migrate",
+    "dev:server": "yarn workspace @dgi/backend dev",
+    "db:seed":    "yarn workspace backend seed",
+    "lint":       "yarn workspaces run lint",
+    "test":       "yarn workspaces run test"
+  },
+  "devDependencies": {
+    "concurrently": "^8.0.0",
+    "typescript":   "^5.4.0"
+  }
+}
