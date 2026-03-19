@@ -3,11 +3,11 @@ import express from 'express';
 import cors from 'cors';
 
 import { getDb, closeDb } from './db/connection';
-import { errorHandler } from './shared/errrors/error-handler';
+import { errorHandler } from './shared/errors/error-handler';
 import healthRouter from './modules/health/health.router';
 
 const app  = express();
-const PORT = Number(process.env.PORT ?? 3000);
+const PORT = Number(process.env.API_PORT ?? 3000);
 
 // ── Middleware ──────────────────────────────────────────────────────────────
 app.use(cors());

@@ -1,0 +1,23 @@
+@import "primeicons/primeicons.css";
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin:     0;
+  padding:    0;
+}
+
+html, body {
+  height:      100%;
+  font-family: var(--p-font-family, system-ui, sans-serif);
+  font-size:   14px;
+  background: var(--p-app-background);
+  color:      var(--p-text-color);
+}
+
+::-webkit-scrollbar       { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb {
+  background:    var(--p-surface-400);
+  border-radius: 3px;
+  &:hover { background: var(--p-surface-500); }
+}

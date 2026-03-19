@@ -1,0 +1,64 @@
+<p-toast />
+
+<div class="app-layout" [class.collapsed]="collapsed()">
+
+  <!-- Sidebar -->
+  <aside class="sidebar">
+
+    <div class="sidebar-header">
+      <i class="pi pi-chart-line logo-icon"></i>
+      <span class="logo-text">DGI Analyzer</span>
+    </div>
+
+    <nav class="sidebar-nav">
+      <a routerLink="/dashboard" routerLinkActive="active" class="nav-item"
+         pTooltip="Dashboard" tooltipPosition="right" [tooltipDisabled]="!collapsed()">
+        <i class="pi pi-home"></i>
+        <span class="nav-label">Dashboard</span>
+      </a>
+      <a routerLink="/companies" routerLinkActive="active" class="nav-item"
+         pTooltip="Companies" tooltipPosition="right" [tooltipDisabled]="!collapsed()">
+        <i class="pi pi-building"></i>
+        <span class="nav-label">Companies</span>
+      </a>
+      <a routerLink="/dividends" routerLinkActive="active" class="nav-item"
+         pTooltip="Dividends" tooltipPosition="right" [tooltipDisabled]="!collapsed()">
+        <i class="pi pi-dollar"></i>
+        <span class="nav-label">Dividends</span>
+      </a>
+      <a routerLink="/importer" routerLinkActive="active" class="nav-item"
+         pTooltip="Import reports" tooltipPosition="right" [tooltipDisabled]="!collapsed()">
+        <i class="pi pi-upload"></i>
+        <span class="nav-label">Importer</span>
+      </a>
+      <a routerLink="/mapper" routerLinkActive="active" class="nav-item"
+         pTooltip="Field mapper" tooltipPosition="right" [tooltipDisabled]="!collapsed()">
+        <i class="pi pi-sliders-h"></i>
+        <span class="nav-label">Mapper</span>
+      </a>
+    </nav>
+
+    <div class="sidebar-footer">
+      <p-button
+        [icon]="isDark() ? 'pi pi-sun' : 'pi pi-moon'"
+        [rounded]="true" severity="secondary" [text]="true"
+        (onClick)="theme.toggle()"
+        [pTooltip]="isDark() ? 'Light mode' : 'Dark mode'"
+        tooltipPosition="right"
+      />
+    </div>
+
+  </aside>
+
+  <!-- Collapse toggle -->
+  <button class="collapse-btn" (click)="toggle()"
+          [attr.aria-label]="collapsed() ? 'Expand sidebar' : 'Collapse sidebar'">
+    <i class="pi" [class.pi-chevron-left]="!collapsed()" [class.pi-chevron-right]="collapsed()"></i>
+  </button>
+
+  <!-- Main -->
+  <main class="main-content">
+    <router-outlet />
+  </main>
+
+</div>
