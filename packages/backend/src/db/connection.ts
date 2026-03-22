@@ -6,7 +6,7 @@ import * as schema from './schema';
 let _db:   ReturnType<typeof drizzle> | null = null;
 let _pool: Pool | null = null;
 
-export async function getDb() {
+export async function getDb(): Promise<ReturnType<typeof drizzle<typeof schema>>>  {
   if (_db) return _db;
 
   _pool = createPool({
@@ -32,6 +32,12 @@ export async function closeDb() {
     _pool = null;
     _db  = null;
   }
+}
+
+export async function getDbOrFail() {
+  const db = await getDb();
+  if (!db) throw new Error('Database not initialized');
+  return db;
 }
 
 export async function testConnection(): Promise<boolean> {

@@ -5,6 +5,8 @@ import cors from 'cors';
 import { getDb, closeDb } from './db/connection';
 import { errorHandler } from './shared/errors/error-handler';
 import healthRouter from './modules/health/health.router';
+import companiesRouter from './modules/companies/companies.router';
+import sectorsRouter from './modules/sectors/sectors.router';
 
 const app  = express();
 const PORT = Number(process.env.API_PORT ?? 3000);
@@ -17,7 +19,8 @@ app.use(express.json());
 app.use('/health', healthRouter);
 
 // TODO: register module routers here as you build them
-// app.use('/api/companies', companiesRouter);
+app.use('/api/companies', companiesRouter);
+app.use('/api/sectors',   sectorsRouter)
 // app.use('/api/importer',  importerRouter);
 // app.use('/api/mapper',    mapperRouter);
 // app.use('/api/ratios',    ratiosRouter);
@@ -38,6 +41,7 @@ async function bootstrap() {
       console.log(`🚀 Backend running on http://localhost:${PORT}`);
       console.log(`   GET http://localhost:${PORT}/health`);
       console.log(`   GET http://localhost:${PORT}/health/db`);
+      console.log(`   GET http://localhost:${PORT}/api/companies`);
     });
 
     // Graceful shutdown

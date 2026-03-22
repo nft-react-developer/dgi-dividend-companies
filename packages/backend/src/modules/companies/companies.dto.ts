@@ -28,7 +28,7 @@ export const companyQueryDto = z.object({
   offset:   z.coerce.number().int().min(0).default(0),
 });
 
-export type CreateCompanyDto  = z.infer<typeof createCompanyDto>;
-export type UpdateCompanyDto  = z.infer<typeof updateCompanyDto>;
-export type CompanyParamsDto  = z.infer<typeof companyParamsDto>;
-export type CompanyQueryDto   = z.infer<typeof companyQueryDto>;
+export type CreateCompanyDto = z.infer<typeof createCompanyDto>;
+export type UpdateCompanyDto = z.infer<typeof updateCompanyDto>;
+export type CompanyParamsDto = z.infer<typeof companyParamsDto>;
+export type CompanyQueryDto  = z.infer<typeof companyQueryDto>;

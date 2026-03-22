@@ -1,7 +1,8 @@
 import { Router, Request, Response } from 'express';
+import type { Router as ExpressRouter } from 'express';
 import { testConnection } from '../../db/connection';
 
-const router = Router();
+const router: ExpressRouter = Router();
 
 // GET /health  — basic liveness check (no DB)
 router.get('/', (_req: Request, res: Response) => {
