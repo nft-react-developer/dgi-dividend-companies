@@ -1,0 +1,384 @@
+{
+  "ticker": "LOG",
+  "sheets": {
+    "income": {
+      "sheetIndex": 0,
+      "labelColumn": "A",
+      "valueColumns": {
+        "2018": "B",
+        "2017": "C",
+        "2016": "D"
+      },
+      "fields": {
+        "revenue": {
+          "type": "direct",
+          "match": "Total Revenue",
+          "aliases": ["Revenues", "Net Revenue", "Total Revenues"],
+          "transform": "millions"
+        },
+        "costOfRevenue": {
+          "type": "direct",
+          "match": "Cost of Goods Sold",
+          "aliases": ["Cost of Revenue", "COGS"],
+          "transform": "millions"
+        },
+        "grossProfit": {
+          "type": "direct",
+          "match": "Gross Profit",
+          "aliases": ["Gross Margin Total"],
+          "transform": "millions"
+        },
+        "operatingIncome": {
+          "type": "direct",
+          "match": "Operating Income",
+          "aliases": ["Income from Operations", "EBIT"],
+          "transform": "millions"
+        },
+        "interestExpense": {
+          "type": "direct",
+          "match": "Interest Expense",
+          "aliases": ["Interest Costs"],
+          "transform": "millions",
+          "negate": true
+        },
+        "pretaxIncome": {
+          "type": "direct",
+          "match": "Income Before Tax",
+          "aliases": ["Pre-Tax Income", "Earnings Before Tax"],
+          "transform": "millions"
+        },
+        "incomeTax": {
+          "type": "direct",
+          "match": "Income Tax Expense",
+          "aliases": ["Provision for Income Taxes"],
+          "transform": "millions"
+        },
+        "netIncome": {
+          "type": "direct",
+          "match": "Net Income",
+          "aliases": ["Net Earnings", "Net Profit"],
+          "transform": "millions"
+        },
+        "epsBasic": {
+          "type": "direct",
+          "match": "Basic EPS",
+          "aliases": ["Earnings Per Share Basic", "EPS Basic"],
+          "transform": "none"
+        },
+        "epsDiluted": {
+          "type": "direct",
+          "match": "Diluted EPS",
+          "aliases": ["Earnings Per Share Diluted", "EPS Diluted"],
+          "transform": "none"
+        },
+        "sharesBasic": {
+          "type": "direct",
+          "match": "Basic Shares Outstanding",
+          "aliases": ["Shares Basic", "Weighted Average Shares Basic"],
+          "transform": "millions"
+        },
+        "sharesDiluted": {
+          "type": "direct",
+          "match": "Diluted Shares Outstanding",
+          "aliases": ["Shares Diluted", "Weighted Average Shares Diluted"],
+          "transform": "millions"
+        },
+        "ebitda": {
+          "type": "calc",
+          "formula": "a + b + c",
+          "vars": {
+            "a": { "match": "Operating Income", "aliases": ["EBIT"], "transform": "millions" },
+            "b": { "match": "Depreciation & Amortization", "aliases": ["D&A", "Depreciation and Amortization"], "transform": "millions" },
+            "c": { "match": "Amortization of Intangibles", "aliases": ["Amortization"], "transform": "millions" }
+          }
+        },
+        "netMarginPct": {
+          "type": "calc",
+          "formula": "a / b",
+          "vars": {
+            "a": { "match": "Net Income", "aliases": ["Net Earnings"], "transform": "millions" },
+            "b": { "match": "Total Revenue", "aliases": ["Revenues"], "transform": "millions" }
+          }
+        }
+      }
+    },
+    "balance": {
+      "sheetIndex": 1,
+      "labelColumn": "A",
+      "valueColumns": {
+        "2018": "B",
+        "2017": "C",
+        "2016": "D"
+      },
+      "fields": {
+        "totalNonCurrentAssets": {
+          "type": "direct",
+          "match": "Total ACTIVO NO CORRIENTE",
+          "transform": "thousands"
+        },
+        "propertyPlantEquipmentNet": {
+          "type": "direct",
+          "match": "Propiedad, planta y equipo",
+          "transform": "thousands"
+        },
+        "investmentProperties": {
+          "type": "direct",
+          "match": "Propiedades de inversión",
+          "transform": "thousands"
+        },
+        "goodwill": {
+          "type": "direct",
+          "match": "Fondo de comercio",
+          "transform": "thousands"
+        },
+        "intangibleAssets": {
+          "type": "direct",
+          "match": "Otros activos intangibles",
+          "transform": "thousands"
+        },
+        "investmentsInAssociates": {
+          "type": "direct",
+          "match": "Participaciones en empresas asociadas",
+          "transform": "thousands"
+        },
+        "otherNonCurrentFinancialAssets": {
+          "type": "direct",
+          "match": "Otros activos financieros no corrientes",
+          "transform": "thousands"
+        },
+        "deferredTaxAssets": {
+          "type": "direct",
+          "match": "Activos por impuestos diferidos",
+          "transform": "thousands"
+        },
+        "totalCurrentAssets": {
+          "type": "direct",
+          "match": "Total ACTIVO CORRIENTE",
+          "transform": "thousands"
+        },
+        "inventory": {
+          "type": "direct",
+          "match": "Existencias",
+          "transform": "thousands"
+        },
+        "accountsReceivable": {
+          "type": "direct",
+          "match": "Deudores comerciales y otras cuentas por cobrar",
+          "transform": "thousands"
+        },
+        "publicAdminReceivables": {
+          "type": "direct",
+          "match": "Administraciones Públicas deudoras",
+          "transform": "thousands"
+        },
+        "otherCurrentFinancialAssets": {
+          "type": "direct",
+          "match": "Otros activos financieros corrientes",
+          "transform": "thousands"
+        },
+        "cashAndEquivalents": {
+          "type": "direct",
+          "match": "Tesorería y otros activos líquidos equivalentes",
+          "transform": "thousands"
+        },
+        "otherCurrentAssets": {
+          "type": "direct",
+          "match": "Otros activos corrientes",
+          "transform": "thousands"
+        },
+        "nonCurrentAssetsHeldForSale": {
+          "type": "direct",
+          "match": "ACTIVOS NO CORRIENTES MANTENIDOS PARA LA VENTA",
+          "transform": "thousands"
+        },
+        "totalAssets": {
+          "type": "direct",
+          "match": "TOTAL ACTIVO",
+          "transform": "thousands"
+        },
+        "totalEquity": {
+          "type": "direct",
+          "match": "PATRIMONIO NETO",
+          "transform": "thousands"
+        },
+        "commonStock": {
+          "type": "direct",
+          "match": "Capital social",
+          "transform": "thousands"
+        },
+        "additionalPaidInCapital": {
+          "type": "direct",
+          "match": "Prima de emisión",
+          "transform": "thousands"
+        },
+        "parentReserves": {
+          "type": "direct",
+          "match": "Reservas de la Sociedad Dominante",
+          "transform": "thousands"
+        },
+        "reorganizationReserves": {
+          "type": "direct",
+          "match": "Reservas de reorganización",
+          "transform": "thousands"
+        },
+        "consolidatedReserves": {
+          "type": "direct",
+          "match": "Reservas en sociedades consolidadas",
+          "transform": "thousands"
+        },
+        "accumulatedOtherComprehensiveIncome": {
+          "type": "direct",
+          "match": "Diferencias de conversión",
+          "transform": "thousands"
+        },
+        "firstTimeAdoptionReserve": {
+          "type": "direct",
+          "match": "Reserva por primera aplicación de NIIF",
+          "transform": "thousands"
+        },
+        "consolidatedNetIncome": {
+          "type": "direct",
+          "match": "Beneficios consolidados del ejercicio",
+          "transform": "thousands"
+        },
+        "interimDividend": {
+          "type": "direct",
+          "match": "Dividendo a cuenta",
+          "transform": "thousands"
+        },
+        "treasuryStock": {
+          "type": "direct",
+          "match": "Acciones Propias",
+          "transform": "thousands"
+        },
+        "equityAttributableToParent": {
+          "type": "direct",
+          "match": "Patrimonio neto atribuible a los accionistas de la Sociedad Dominante",
+          "transform": "thousands"
+        },
+        "minorityInterests": {
+          "type": "direct",
+          "match": "Intereses minoritarios",
+          "transform": "thousands"
+        },
+        "totalNonCurrentLiabilities": {
+          "type": "direct",
+          "match": "Total PASIVO NO CORRIENTE",
+          "transform": "thousands"
+        },
+        "otherNonCurrentFinancialLiabilities": {
+          "type": "direct",
+          "match": "Otros pasivos financieros no corrientes",
+          "transform": "thousands"
+        },
+        "otherNonCurrentLiabilities": {
+          "type": "direct",
+          "match": "Otros pasivos no corrientes",
+          "transform": "thousands"
+        },
+        "nonCurrentProvisions": {
+          "type": "direct",
+          "match": "Provisiones no corrientes",
+          "transform": "thousands"
+        },
+        "deferredTaxLiabilities": {
+          "type": "direct",
+          "match": "Pasivos por impuesto diferido",
+          "transform": "thousands"
+        },
+        "totalCurrentLiabilities": {
+          "type": "direct",
+          "match": "Total PASIVO CORRIENTE",
+          "transform": "thousands"
+        },
+        "otherCurrentFinancialLiabilities": {
+          "type": "direct",
+          "match": "Otros pasivos financieros corrientes",
+          "transform": "thousands"
+        },
+        "accountsPayable": {
+          "type": "direct",
+          "match": "Acreedores comerciales y otras cuentas por pagar",
+          "transform": "thousands"
+        },
+        "publicAdminPayables": {
+          "type": "direct",
+          "match": "Administraciones Públicas acreedoras",
+          "transform": "thousands"
+        },
+        "currentProvisions": {
+          "type": "direct",
+          "match": "Provisiones corrientes",
+          "transform": "thousands"
+        },
+        "otherCurrentLiabilities": {
+          "type": "direct",
+          "match": "Otros pasivos corrientes",
+          "transform": "thousands"
+        },
+        "totalLiabilitiesAndEquity": {
+          "type": "direct",
+          "match": "TOTAL PATRIMONIO NETO Y PASIVO",
+          "transform": "thousands"
+        },
+        "sharesOutstanding": {
+          "type": "direct",
+          "match": "Acciones en circulación",
+          "transform": "thousands"
+        },
+        "totalLiabilities": {
+          "type": "direct",
+          "match": "Total PASIVO",
+          "transform": "thousands"
+        }
+      }
+    },
+    "cashflow": {
+      "sheetIndex": 2,
+      "labelColumn": "A",
+      "valueColumns": {
+        "2018": "B",
+        "2017": "C",
+        "2016": "D"
+      },
+      "fields": {
+        "operatingCashFlow": {
+          "type": "direct",
+          "match": "Cash from Operations",
+          "aliases": ["Net Cash from Operating Activities", "Operating Cash Flow"],
+          "transform": "millions"
+        },
+        "capex": {
+          "type": "direct",
+          "match": "Capital Expenditures",
+          "aliases": ["Capex", "Purchase of Property Plant Equipment"],
+          "transform": "millions",
+          "negate": true
+        },
+        "freeCashFlow": {
+          "type": "calc",
+          "formula": "a - b",
+          "vars": {
+            "a": { "match": "Cash from Operations", "aliases": ["Operating Cash Flow"], "transform": "millions" },
+            "b": { "match": "Capital Expenditures", "aliases": ["Capex"], "transform": "millions", "negate": true }
+          }
+        },
+        "dividendsPaid": {
+          "type": "direct",
+          "match": "Dividends Paid",
+          "aliases": ["Common Dividends", "Cash Dividends Paid"],
+          "transform": "millions",
+          "negate": true
+        },
+        "payoutRatio": {
+          "type": "calc",
+          "formula": "abs(a) / b",
+          "vars": {
+            "a": { "match": "Dividends Paid", "aliases": ["Common Dividends"], "transform": "millions" },
+            "b": { "match": "Net Income", "aliases": ["Net Earnings"], "transform": "millions" }
+          }
+        }
+      }
+    }
+  }
+}

@@ -8,11 +8,11 @@
     "packages/shared"
   ],
   "scripts": {
-    "dev":        "concurrently \"yarn workspace backend dev\" \"yarn workspace frontend dev\" \"yarn workspace electron dev\"",
-    "build":      "yarn workspace shared build && yarn workspace backend build && yarn workspace frontend build && yarn workspace electron build",
-    "db:migrate": "yarn workspace backend migrate",
+    "dev":        "concurrently \"yarn workspace @dgi/backend dev\" \"yarn workspace @dgi/frontend dev\" \"yarn workspace @dgi/electron dev\"",
+    "build":      "yarn workspace @dgi/shared build && yarn workspace @dgi/backend build && yarn workspace @dgi/frontend build && yarn workspace @dgi/electron build",
+    "db:migrate": "yarn workspace @dgi/backend migrate",
     "dev:server": "yarn workspace @dgi/backend dev",
-    "db:seed":    "yarn workspace backend seed",
+    "db:seed":    "yarn workspace @dgi/backend seed",
     "lint":       "yarn workspaces run lint",
     "test":       "yarn workspaces run test"
   },

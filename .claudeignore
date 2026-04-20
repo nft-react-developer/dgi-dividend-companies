@@ -1,0 +1,7 @@
+# Archivos de entorno - nunca leer
+.env
+.env.*
+*.env
+**/.env
+**/.env.*
+**/*.env

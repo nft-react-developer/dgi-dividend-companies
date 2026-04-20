@@ -17,7 +17,7 @@ let backendProc: ChildProcess  | null = null;
 function startBackend(): Promise<void> {
   return new Promise((resolve) => {
     const backendPath = isDev
-      ? path.join(__dirname, '../../../backend/src/main.ts')
+      ? path.join(__dirname, '../../backend/src/main.ts')
       : path.join(process.resourcesPath, 'backend/main.js');
 
     const command = isDev ? 'ts-node-dev' : 'node';
@@ -50,6 +50,27 @@ function startBackend(): Promise<void> {
   });
 }
 
+// ── Helpers ───────────────────────────────────────────────────────────────────
+function waitForUrl(url: string, timeoutMs = 30000): Promise<void> {
+  return new Promise((resolve, reject) => {
+    const start = Date.now();
+    const http = require('http') as typeof import('http');
+    const check = () => {
+      http.get(url, (res) => {
+        res.resume();
+        resolve();
+      }).on('error', () => {
+        if (Date.now() - start > timeoutMs) {
+          reject(new Error(`Timeout waiting for ${url}`));
+        } else {
+          setTimeout(check, 500);
+        }
+      });
+    };
+    check();
+  });
+}
+
 // ── Window ────────────────────────────────────────────────────────────────────
 function createWindow() {
   mainWindow = new BrowserWindow({
@@ -69,6 +90,7 @@ function createWindow() {
 
   mainWindow.loadURL(FRONTEND_URL);
 
+  log.info('Main window created, loading URL:', FRONTEND_URL);
   mainWindow.once('ready-to-show', () => {
     mainWindow?.show();
     if (isDev) mainWindow?.webContents.openDevTools({ mode: 'detach' });
@@ -91,6 +113,12 @@ ipcMain.handle('app:is-dev',      () => isDev);
 // ── Lifecycle ─────────────────────────────────────────────────────────────────
 app.whenReady().then(async () => {
   await startBackend();
+  if (isDev) {
+    log.info('Waiting for frontend dev server...');
+    await waitForUrl(`http://localhost:${FRONTEND_PORT}`).catch(() =>
+      log.warn('Frontend dev server did not respond in time, loading anyway')
+    );
+  }
   createWindow();
 
   app.on('activate', () => {

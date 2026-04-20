@@ -1,4 +1,5 @@
-import 'dotenv/config';
+import * as dotenv from 'dotenv';
+dotenv.config();
 import express from 'express';
 import cors from 'cors';
 
@@ -7,6 +8,7 @@ import { errorHandler } from './shared/errors/error-handler';
 import healthRouter from './modules/health/health.router';
 import companiesRouter from './modules/companies/companies.router';
 import sectorsRouter from './modules/sectors/sectors.router';
+import importerRouter from './modules/importer/importer.router';
 
 const app  = express();
 const PORT = Number(process.env.API_PORT ?? 3000);
@@ -21,7 +23,7 @@ app.use('/health', healthRouter);
 // TODO: register module routers here as you build them
 app.use('/api/companies', companiesRouter);
 app.use('/api/sectors',   sectorsRouter)
-// app.use('/api/importer',  importerRouter);
+app.use('/api/importer',  importerRouter);
 // app.use('/api/mapper',    mapperRouter);
 // app.use('/api/ratios',    ratiosRouter);
 // app.use('/api/portfolio', portfolioRouter);
@@ -42,6 +44,8 @@ async function bootstrap() {
       console.log(`   GET http://localhost:${PORT}/health`);
       console.log(`   GET http://localhost:${PORT}/health/db`);
       console.log(`   GET http://localhost:${PORT}/api/companies`);
+      console.log(`   GET http://localhost:${PORT}/api/sectors`);
+      console.log(`   GET http://localhost:${PORT}/api/importer`);
     });
 
     // Graceful shutdown

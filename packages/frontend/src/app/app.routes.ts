@@ -2,7 +2,7 @@ import { Routes } from '@angular/router';
 
 export const routes: Routes = [
   {
-    path:      '',
+    path:       '',
     redirectTo: 'dashboard',
     pathMatch:  'full',
   },
@@ -17,7 +17,12 @@ export const routes: Routes = [
                            .then(m => m.CompaniesComponent),
   },
   {
-    path:      '**',
+    path:          'importer',
+    loadComponent: () => import('./features/importer/importer.component')
+                           .then(m => m.ImporterComponent),
+  },
+  {
+    path:       '**',
     redirectTo: 'dashboard',
   },
 ];
