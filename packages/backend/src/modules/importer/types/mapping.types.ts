@@ -1,7 +1,10 @@
+export type FieldTransform = 'thousands' | 'percentage' | 'none'
+
 export type DirectField = {
   type: 'direct'
   match: string
   aliases?: string[]
+  transform?: FieldTransform
 }
 
 export type CalcField = {

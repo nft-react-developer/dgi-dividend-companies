@@ -1,9 +1,9 @@
 import { drizzle } from 'drizzle-orm/mysql2';
-import { createPool } from 'mysql2/promise';
-import type { Pool } from 'mysql2/promise';
+import { createPool } from 'mysql2';
+import type { Pool } from 'mysql2';
 import * as schema from './schema';
 
-let _db:   ReturnType<typeof drizzle> | null = null;
+let _db:   ReturnType<typeof drizzle<typeof schema>> | null = null;
 let _pool: Pool | null = null;
 
 export async function getDb(): Promise<ReturnType<typeof drizzle<typeof schema>>>  {

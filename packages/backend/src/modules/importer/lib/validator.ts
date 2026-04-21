@@ -9,14 +9,14 @@ export interface ValidationResult {
   warnings: string[];
 }
 
-// ─── Thresholds DGI (Dividends Still Don't Lie) ───────────────────────────────
+// ─── Thresholds DGI (Dividends Still Don't Lie express in %) ───────────────────────────────
 
 const THRESHOLDS = {
-  payoutRatioMax:         0.50,
-  payoutRatioMaxUtility:  0.75,
-  debtRatioMax:           0.50,
-  debtRatioMaxUtility:    0.75,
-  payoutDangerThreshold:  1.00,
+  payoutRatioMax:         50,
+  payoutRatioMaxUtility:  75,
+  debtRatioMax:           50,
+  debtRatioMaxUtility:    75,
+  payoutDangerThreshold:  100,
 } as const;
 
 // ─── Helper ───────────────────────────────────────────────────────────────────
@@ -43,9 +43,9 @@ export function validateDGI(
   if (payout === null) {
     warnings.push('Payout ratio could not be calculated — missing dividendPerShare or epsBasic');
   } else if (payout > THRESHOLDS.payoutDangerThreshold) {
-    warnings.push(`Dividend in danger: payout ${(payout * 100).toFixed(1)}% exceeds earnings (>100%)`);
+    warnings.push(`Dividend in danger: payout ${(payout).toFixed(1)}% exceeds earnings (>100%)`);
   } else if (payout > payoutMax) {
-    warnings.push(`Payout ratio ${(payout * 100).toFixed(1)}% exceeds ${(payoutMax * 100).toFixed(0)}% threshold`);
+    warnings.push(`Payout ratio ${(payout).toFixed(1)}% exceeds ${(payoutMax).toFixed(0)}% threshold`);
   }
 
   // ── 2. Debt ratio ──────────────────────────────────────────────────────────

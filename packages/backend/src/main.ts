@@ -38,6 +38,7 @@ async function bootstrap() {
     // Init DB pool on startup
     await getDb();
     console.log('✅ Database pool initialized');
+    console.log('debug mapper: ', process.env.MAPPER_DEBUG === 'true')
 
     const server = app.listen(PORT, () => {
       console.log(`🚀 Backend running on http://localhost:${PORT}`);

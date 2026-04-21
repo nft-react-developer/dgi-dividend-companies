@@ -2,7 +2,7 @@
   "ticker": "LOG",
   "sheets": {
     "balance": {
-      "sheetIndex": 1,
+      "sheetIndex": 0,
       "labelColumn": "A",
       "valueColumns": {
         "2018": "B",
@@ -229,8 +229,42 @@
           "type": "direct",
           "match": "Total PASIVO",
           "transform": "thousands"
+        },
+        "longTermDebt": {
+          "type": "direct",
+          "match": "Otros pasivos financieros no corrientes",
+          "transform": "thousands"
+        },
+        "shortTermDebt": {
+          "type": "direct",
+          "match": "Otros pasivos financieros corrientes",
+          "transform": "thousands"
+        },
+        "totalDebt": {
+          "type": "calc",
+          "formula": "a + b",
+          "vars": {
+            "a": { "type": "direct", "match": "Otros pasivos financieros no corrientes", "aliases": ["Otros pasivos financieros no corrientes"], "transform": "thousands" },
+            "b": { "type": "direct", "match": "Otros pasivos financieros corrientes", "aliases": ["Otros pasivos financieros corrientes"], "transform": "thousands" }
+          }
         }
       }
-    }
+    },
+     "cashflow": {
+      "sheetIndex": 2,
+      "labelColumn": "A",
+      "valueColumns": {
+        "2018": "B",
+        "2017": "C",
+        "2016": "D"
+      },
+      "fields": {
+          "payoutRatio": {
+          "type": "direct",
+          "match": "Payout Ratio",
+          "transform": "percentage" 
+        }
+      }
   }
+}
 }

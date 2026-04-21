@@ -4,6 +4,7 @@ import { eq, and } from 'drizzle-orm';
 import { getDb, schema } from '../../db/connection';
 import { AppError } from '../../shared/errors/error-handler';
 import type { NewIncomeStatement } from '../../db/schema/income-statement.schema';
+import type { NewBalanceSheet } from '../../db/schema/balance-sheet.schema';
 import type { MappedRecord } from './types/mapping.types';
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
@@ -91,6 +92,76 @@ async function upsertIncomeStatement(
   }
 }
 
+// ─── Balance sheet upsert ─────────────────────────────────────────────────────
+
+async function upsertBalanceSheet(
+  db: Awaited<ReturnType<typeof getDb>>,
+  companyId: number,
+  record: MappedRecord,
+  sourceFile?: string,
+): Promise<void> {
+  const existing = await db
+    .select({ id: schema.balanceSheet.id })
+    .from(schema.balanceSheet)
+    .where(
+      and(
+        eq(schema.balanceSheet.companyId, companyId),
+        eq(schema.balanceSheet.fiscalYear, record.fiscalYear),
+        eq(schema.balanceSheet.periodType, 'annual'),
+      ),
+    )
+    .limit(1);
+
+  const r = record as Record<string, number | null | undefined | string>;
+
+  const values: NewBalanceSheet = {
+    companyId,
+    fiscalYear:                       record.fiscalYear,
+    periodType:                       'annual',
+    currency:                         (record.currency as string) ?? 'USD',
+    cashAndEquivalents:               toBigint(r.cashAndEquivalents as number),
+    shortTermInvestments:             toBigint(r.shortTermInvestments as number),
+    accountsReceivable:               toBigint(r.accountsReceivable as number),
+    inventory:                        toBigint(r.inventory as number),
+    otherCurrentAssets:               toBigint(r.otherCurrentAssets as number),
+    totalCurrentAssets:               toBigint(r.totalCurrentAssets as number),
+    propertyPlantEquipmentNet:        toBigint(r.propertyPlantEquipmentNet as number),
+    goodwill:                         toBigint(r.goodwill as number),
+    intangibleAssets:                 toBigint(r.intangibleAssets as number),
+    longTermInvestments:              toBigint(r.longTermInvestments as number),
+    otherNonCurrentAssets:            toBigint(r.otherNonCurrentAssets as number),
+    totalNonCurrentAssets:            toBigint(r.totalNonCurrentAssets as number),
+    totalAssets:                      toBigint(r.totalAssets as number),
+    accountsPayable:                  toBigint(r.accountsPayable as number),
+    shortTermDebt:                    toBigint(r.shortTermDebt as number),
+    currentPortionLongTermDebt:       toBigint(r.currentPortionLongTermDebt as number),
+    otherCurrentLiabilities:          toBigint(r.otherCurrentLiabilities as number),
+    totalCurrentLiabilities:          toBigint(r.totalCurrentLiabilities as number),
+    longTermDebt:                     toBigint(r.longTermDebt as number),
+    deferredTaxLiabilities:           toBigint(r.deferredTaxLiabilities as number),
+    otherNonCurrentLiabilities:       toBigint(r.otherNonCurrentLiabilities as number),
+    totalNonCurrentLiabilities:       toBigint(r.totalNonCurrentLiabilities as number),
+    totalLiabilities:                 toBigint(r.totalLiabilities as number),
+    commonStock:                      toBigint(r.commonStock as number),
+    retainedEarnings:                 toBigint(r.retainedEarnings as number),
+    additionalPaidInCapital:          toBigint(r.additionalPaidInCapital as number),
+    treasuryStock:                    toBigint(r.treasuryStock as number),
+    accumulatedOtherComprehensiveIncome: toBigint(r.accumulatedOtherComprehensiveIncome as number),
+    totalEquity:                      toBigint(r.totalEquity as number),
+    totalLiabilitiesAndEquity:        toBigint(r.totalLiabilitiesAndEquity as number),
+    sourceFile:                       sourceFile ?? null,
+  };
+
+  if (existing[0]) {
+    await db
+      .update(schema.balanceSheet)
+      .set(values)
+      .where(eq(schema.balanceSheet.id, existing[0].id));
+  } else {
+    await db.insert(schema.balanceSheet).values(values);
+  }
+}
+
 // ─── Public ───────────────────────────────────────────────────────────────────
 
 export async function upsertFinancials(
@@ -103,9 +174,8 @@ export async function upsertFinancials(
 
   for (const record of records) {
     await upsertIncomeStatement(db, companyId, record, sourceFile);
+    await upsertBalanceSheet(db, companyId, record, sourceFile);
 
-    // Se agregan cuando sus schemas estén descomentados en index.ts
-    // await upsertBalanceSheet(db, companyId, record, sourceFile);
     // await upsertCashFlow(db, companyId, record, sourceFile);
   }
 }

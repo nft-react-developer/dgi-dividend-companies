@@ -8,6 +8,8 @@
     "packages/shared"
   ],
   "scripts": {
+    "dev:frontend": "yarn workspace @dgi/frontend dev",
+    "dev:backend":  "yarn workspace @dgi/backend dev",
     "dev":        "concurrently \"yarn workspace @dgi/backend dev\" \"yarn workspace @dgi/frontend dev\" \"yarn workspace @dgi/electron dev\"",
     "build":      "yarn workspace @dgi/shared build && yarn workspace @dgi/backend build && yarn workspace @dgi/frontend build && yarn workspace @dgi/electron build",
     "db:migrate": "yarn workspace @dgi/backend migrate",
