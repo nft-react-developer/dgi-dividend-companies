@@ -9,6 +9,7 @@ import healthRouter from './modules/health/health.router';
 import companiesRouter from './modules/companies/companies.router';
 import sectorsRouter from './modules/sectors/sectors.router';
 import importerRouter from './modules/importer/importer.router';
+import financialDataRouter from './modules/financial-data/financial-data.router';
 
 const app  = express();
 const PORT = Number(process.env.API_PORT ?? 3000);
@@ -23,7 +24,8 @@ app.use('/health', healthRouter);
 // TODO: register module routers here as you build them
 app.use('/api/companies', companiesRouter);
 app.use('/api/sectors',   sectorsRouter)
-app.use('/api/importer',  importerRouter);
+app.use('/api/importer',       importerRouter);
+app.use('/api/financial-data', financialDataRouter);
 // app.use('/api/mapper',    mapperRouter);
 // app.use('/api/ratios',    ratiosRouter);
 // app.use('/api/portfolio', portfolioRouter);

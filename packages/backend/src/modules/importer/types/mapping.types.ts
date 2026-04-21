@@ -1,4 +1,4 @@
-export type FieldTransform = 'thousands' | 'percentage' | 'none'
+export type FieldTransform = 'thousands' | 'millions' | 'percentage' | 'none'
 
 export type DirectField = {
   type: 'direct'

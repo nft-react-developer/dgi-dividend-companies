@@ -29,6 +29,8 @@ function resolveValue(
   const v = row[col]
   const n = parseFloat(String(v).replace(/,/g, ''))
   if (isNaN(n)) return null
+  if (transform === 'thousands')  return Math.round(n * 1_000)
+  if (transform === 'millions')   return Math.round(n * 1_000_000)
   if (transform === 'percentage') return Math.round(n * 100 * 100) / 100  // 0.9567 → 95.67
   return n
 }
@@ -39,7 +41,7 @@ export function applyMapping(
 ): { records: any[]; warnings: string[] } {
   const warnings: string[] = []
   const yearSets: Record<string, Record<string, number | null>> = {}
-  
+
   for (const [section, config] of Object.entries(mapping.sheets)) {
     const rows = raw[section]
 

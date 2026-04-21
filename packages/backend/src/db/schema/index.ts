@@ -7,8 +7,8 @@ export * from './relations';
 export * from './import-log.schema';
 export * from './balance-sheet.schema';
  
+export * from './cash-flow.schema';
 // TODO: add as you build each module
-// export * from './cash-flow.schema';
 // export * from './ratios-snapshot.schema';
 // export * from './portfolio.schema';
 // export * from './alerts.schema';
