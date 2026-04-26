@@ -263,6 +263,11 @@
           "type": "direct",
           "match": "Payout Ratio",
           "transform": "percentage" 
+        },
+        "dividendsPaid": {
+          "type": "direct",
+          "match": "Dividendos",
+          "transform": "thousands"
         }
       }
   }

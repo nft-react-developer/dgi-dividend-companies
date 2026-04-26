@@ -5,6 +5,8 @@ import { TabsModule } from 'primeng/tabs';
 import { SkeletonModule } from 'primeng/skeleton';
 import { CompaniesService } from '../companies/companies.service';
 import { FinancialDataService } from './financial-data.service';
+import { FinancialRatiosComponent } from './components/financial-ratios.component';
+import { BalanceSheetChartComponent } from './components/balance-sheet-chart.component';
 import type { Company } from '../companies/company.model';
 import type {
   FinancialData,
@@ -24,7 +26,7 @@ interface RowDef {
 @Component({
   selector:   'app-financial-data',
   standalone: true,
-  imports: [FormsModule, AutoCompleteModule, TabsModule, SkeletonModule],
+  imports: [FormsModule, AutoCompleteModule, TabsModule, SkeletonModule, FinancialRatiosComponent],
   template: `
     <div class="fd-wrap">
 
@@ -74,6 +76,7 @@ interface RowDef {
             <p-tab value="balance">Balance Sheet</p-tab>
             <p-tab value="income">Income Statement</p-tab>
             <p-tab value="cashflow">Cash Flows</p-tab>
+            <p-tab value="ratios">Ratios</p-tab>
           </p-tablist>
 
           <p-tabpanels>
@@ -181,6 +184,11 @@ interface RowDef {
                   </table>
                 }
               </div>
+            </p-tabpanel>
+
+            <!-- Ratios -->
+            <p-tabpanel value="ratios">
+              <app-financial-ratios [data]="d" [years]="years()" />
             </p-tabpanel>
 
           </p-tabpanels>

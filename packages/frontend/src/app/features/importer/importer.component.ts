@@ -157,7 +157,6 @@ import { ImporterService } from './importer.service';
       border: 1px solid var(--p-surface-border);
       border-radius: 8px;
       padding: 1.5rem;
-      max-width: 600px;
     }
 
     .field {
@@ -185,8 +184,6 @@ import { ImporterService } from './importer.service';
       gap: 0.75rem;
       margin-top: 0.5rem;
     }
-
-    .result-card { max-width: 600px; }
 
     .result-summary {
       display: flex;

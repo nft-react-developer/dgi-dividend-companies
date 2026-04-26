@@ -1,0 +1,10 @@
+<div class="table-wrap">
+      @if (rows().length === 0) {
+        <p class="no-data">No ratio data available</p>
+      } @else {
+        <div class="d-flex gap-2">
+          <app-balance-sheet-chart [data]="data()" [years]="years()" />
+          <app-dividend-chart [data]="data()" [years]="years()" />
+        </div>
+      }
+    </div>
