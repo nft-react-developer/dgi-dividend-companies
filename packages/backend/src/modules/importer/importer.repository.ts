@@ -5,6 +5,7 @@ import { getDb, schema } from '../../db/connection';
 import { AppError } from '../../shared/errors/error-handler';
 import type { NewIncomeStatement } from '../../db/schema/income-statement.schema';
 import type { NewBalanceSheet } from '../../db/schema/balance-sheet.schema';
+import type { NewCashFlowStatement } from '../../db/schema/cash-flow.schema';
 import type { MappedRecord } from './types/mapping.types';
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
@@ -162,6 +163,66 @@ async function upsertBalanceSheet(
   }
 }
 
+// ─── Cash flow upsert ─────────────────────────────────────────────────────────
+
+async function upsertCashFlow(
+  db: Awaited<ReturnType<typeof getDb>>,
+  companyId: number,
+  record: MappedRecord,
+  sourceFile?: string,
+): Promise<void> {
+  const existing = await db
+    .select({ id: schema.cashFlowStatement.id })
+    .from(schema.cashFlowStatement)
+    .where(
+      and(
+        eq(schema.cashFlowStatement.companyId, companyId),
+        eq(schema.cashFlowStatement.fiscalYear, record.fiscalYear),
+        eq(schema.cashFlowStatement.periodType, 'annual'),
+      ),
+    )
+    .limit(1);
+
+  const r = record as Record<string, number | null | undefined | string>;
+
+  const extendedKeys = ['evEbitda', 'perAverage', 'perMin', 'payout', 'capexMaintenance', 'capexMaintenanceInvestment'];
+  const extendedMetrics: Record<string, number | null> = {};
+  for (const key of extendedKeys) {
+    if (r[key] !== undefined) extendedMetrics[key] = r[key] as number | null;
+  }
+
+  const values: NewCashFlowStatement = {
+    companyId,
+    fiscalYear:               record.fiscalYear,
+    periodType:               'annual',
+    currency:                 (record.currency as string) ?? 'EUR',
+    netIncome:                toBigint(r.netIncome as number),
+    depreciationAmortization: toBigint(r.depreciationAmortization as number),
+    changesInWorkingCapital:  toBigint(r.changesInWorkingCapital as number),
+    otherOperatingActivities: toBigint(r.otherOperatingActivities as number),
+    capitalExpenditures:      toBigint(r.capitalExpenditures as number),
+    acquisitions:             toBigint(r.acquisitions as number),
+    purchasesOfInvestments:   toBigint(r.purchasesOfInvestments as number),
+    salesOfInvestments:       toBigint(r.salesOfInvestments as number),
+    dividendsPaid:            toBigint(r.dividendsPaid as number),
+    repurchaseOfStock:        toBigint(r.repurchaseOfStock as number),
+    debtRepayment:            toBigint(r.debtRepayment as number),
+    issuanceOfDebt:           toBigint(r.issuanceOfDebt as number),
+    netChangeInCash:          toBigint(r.netChangeInCash as number),
+    extendedMetrics:          Object.keys(extendedMetrics).length ? extendedMetrics : null,
+    sourceFile:               sourceFile ?? null,
+  };
+
+  if (existing[0]) {
+    await db
+      .update(schema.cashFlowStatement)
+      .set(values)
+      .where(eq(schema.cashFlowStatement.id, existing[0].id));
+  } else {
+    await db.insert(schema.cashFlowStatement).values(values);
+  }
+}
+
 // ─── Public ───────────────────────────────────────────────────────────────────
 
 export async function upsertFinancials(
@@ -176,6 +237,6 @@ export async function upsertFinancials(
     await upsertIncomeStatement(db, companyId, record, sourceFile);
     await upsertBalanceSheet(db, companyId, record, sourceFile);
 
-    // await upsertCashFlow(db, companyId, record, sourceFile);
+    await upsertCashFlow(db, companyId, record, sourceFile);
   }
 }

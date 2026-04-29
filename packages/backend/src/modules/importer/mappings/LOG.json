@@ -250,7 +250,7 @@
         }
       }
     },
-     "cashflow": {
+    "cashflow": {
       "sheetIndex": 2,
       "labelColumn": "A",
       "valueColumns": {
@@ -259,17 +259,129 @@
         "2016": "D"
       },
       "fields": {
-          "payoutRatio": {
+        "payoutRatio": {
           "type": "direct",
           "match": "Payout Ratio",
-          "transform": "percentage" 
+          "transform": "percentage"
         },
+
+        "netIncome": {
+          "type": "direct",
+          "match": "Resultado consolidado antes de impuestos procedente de operaciones continuadas",
+          "transform": "thousands"
+        },
+        "depreciationAmortization": {
+          "type": "direct",
+          "match": "Depreciación y amortización",
+          "transform": "thousands"
+        },
+        "otherOperatingActivities": {
+          "type": "calc",
+          "formula": "a + b + c + d + e + f + g",
+          "vars": {
+            "a": { "type": "direct", "match": "Resultado de sociedades por puesta en equivalencia", "transform": "thousands" },
+            "b": { "type": "direct", "match": "Correcciones valorativas por deterioro", "transform": "thousands" },
+            "c": { "type": "direct", "match": "Dotaciones/ (Reversiones) a las provisiones", "transform": "thousands" },
+            "d": { "type": "direct", "match": "Resultados por venta de inmovilizado", "transform": "thousands" },
+            "e": { "type": "direct", "match": "Resultado financiero", "transform": "thousands" },
+            "f": { "type": "direct", "match": "Impuesto sobre beneficios pagados", "transform": "thousands" },
+            "g": { "type": "direct", "match": "Ingresos y gastos financieros", "transform": "thousands" }
+          }
+        },
+        "changesInWorkingCapital": {
+          "type": "calc",
+          "formula": "a + b + c + d + e",
+          "vars": {
+            "a": { "type": "direct", "match": "(Aumento)/Disminución de existencias", "transform": "thousands" },
+            "b": { "type": "direct", "match": "(Aumento)/Disminución de deudores comerciales y otras cuentas por cobrar", "transform": "thousands" },
+            "c": { "type": "direct", "match": "Aumento/(Disminución) de acreedores comerciales", "transform": "thousands" },
+            "d": { "type": "direct", "match": "Aumento/(Disminución) de otros pasivos corrientes", "transform": "thousands" },
+            "e": { "type": "direct", "match": "Aumento/(Disminución) de otros pasivos no corrientes", "transform": "thousands" }
+          }
+        },
+
+        "acquisitions": {
+          "type": "direct",
+          "match": "Empresas de grupo y asociadas",
+          "transform": "thousands"
+        },
+        "purchasesOfInvestments": {
+          "type": "direct",
+          "match": "Otros activos financieros",
+          "transform": "thousands"
+        },
+        "salesOfInvestments": {
+          "type": "direct",
+          "match": "Enajenación de activos no corrientes mantenidos para la venta",
+          "transform": "thousands"
+        },
+        "capitalExpenditures": {
+          "type": "direct",
+          "match": "CAPEX Total (M+I+O)",
+          "transform": "thousands"
+        },
+
         "dividendsPaid": {
           "type": "direct",
           "match": "Dividendos",
           "transform": "thousands"
+        },
+        "repurchaseOfStock": {
+          "type": "direct",
+          "match": "Adquisición de instrumentos de patrimonio de la sociedad dominante (-)",
+          "transform": "thousands"
+        },
+        "debtRepayment": {
+          "type": "calc",
+          "formula": "a + b",
+          "vars": {
+            "a": { "type": "direct", "match": "Devolución y amortización de deudas con entidades de crédito", "transform": "thousands" },
+            "b": { "type": "direct", "match": "Devolución y amortización de otras deudas", "transform": "thousands" }
+          }
+        },
+        "issuanceOfDebt": {
+          "type": "direct",
+          "match": "Emisión de otras deudas",
+          "transform": "thousands"
+        },
+
+        "netChangeInCash": {
+          "type": "direct",
+          "match": "AUMENTO/ DISMINUCIÓN NETA DEL EFECTIVO O EQUIVALENTES",
+          "transform": "thousands"
+        },
+
+        "evEbitda": {
+          "type": "direct",
+          "match": "evEbitda",
+          "transform": "thousands"
+        },
+        "perAverage": {
+          "type": "direct",
+          "match": "perAverage",
+          "transform": "thousands"
+        },
+        "perMin": {
+          "type": "direct",
+          "match": "perMin",
+          "transform": "thousands"
+        },
+        "payout": {
+          "type": "direct",
+          "match": "payout",
+          "transform": "thousands"
+        },
+        "capexMaintenance": {
+          "type": "direct",
+          "match": "CAPEX Mantenimiento (M)",
+          "transform": "thousands"
+        },
+        "capexMaintenanceInvestment": {
+          "type": "direct",
+          "match": "CAPEX Mantenimiento + Inversión (M+I)",
+          "transform": "thousands"
         }
       }
+    }
   }
-}
 }
