@@ -110,6 +110,21 @@ interface RowDef {
                           }
                         </tr>
                       }
+                      @if (balanceExtKeys().length) {
+                        <tr class="section-header">
+                          <td [attr.colspan]="years().length + 1">Extended Metrics</td>
+                        </tr>
+                        @for (key of balanceExtKeys(); track key) {
+                          <tr>
+                            <td class="label-col">{{ camelToLabel(key) }}</td>
+                            @for (y of years(); track y) {
+                              <td [class.negative]="isNeg(extVal(d.balance, y, key))">
+                                {{ fmt(extVal(d.balance, y, key)) }}
+                              </td>
+                            }
+                          </tr>
+                        }
+                      }
                     </tbody>
                   </table>
                 }
@@ -145,6 +160,21 @@ interface RowDef {
                           }
                         </tr>
                       }
+                      @if (incomeExtKeys().length) {
+                        <tr class="section-header">
+                          <td [attr.colspan]="years().length + 1">Extended Metrics</td>
+                        </tr>
+                        @for (key of incomeExtKeys(); track key) {
+                          <tr>
+                            <td class="label-col">{{ camelToLabel(key) }}</td>
+                            @for (y of years(); track y) {
+                              <td [class.negative]="isNeg(extVal(d.income, y, key))">
+                                {{ fmt(extVal(d.income, y, key)) }}
+                              </td>
+                            }
+                          </tr>
+                        }
+                      }
                     </tbody>
                   </table>
                 }
@@ -179,6 +209,21 @@ interface RowDef {
                             </td>
                           }
                         </tr>
+                      }
+                      @if (cashflowExtKeys().length) {
+                        <tr class="section-header">
+                          <td [attr.colspan]="years().length + 1">Extended Metrics</td>
+                        </tr>
+                        @for (key of cashflowExtKeys(); track key) {
+                          <tr>
+                            <td class="label-col">{{ camelToLabel(key) }}</td>
+                            @for (y of years(); track y) {
+                              <td [class.negative]="isNeg(extVal(d.cashflow, y, key))">
+                                {{ fmt(extVal(d.cashflow, y, key)) }}
+                              </td>
+                            }
+                          </tr>
+                        }
                       }
                     </tbody>
                   </table>
@@ -330,6 +375,10 @@ export class FinancialDataComponent implements OnInit {
     return [...all].sort((a, b) => b - a);
   });
 
+  balanceExtKeys = computed(() => this.extKeys(this.data()?.balance ?? []));
+  incomeExtKeys  = computed(() => this.extKeys(this.data()?.income  ?? []));
+  cashflowExtKeys = computed(() => this.extKeys(this.data()?.cashflow ?? []));
+
   // ── Row definitions ──────────────────────────────────────────────────────────
 
   readonly balanceRows: RowDef[] = [
@@ -398,7 +447,7 @@ export class FinancialDataComponent implements OnInit {
 
   readonly cashflowRows: RowDef[] = [
     { section: 'Operating Activities', label: 'Net Income',          field: 'netIncome' },
-    { label: 'D&A',                            field: 'depreciationAmortization' },
+    { label: 'Depreciation & Amortization',                            field: 'depreciationAmortization' },
     { label: 'Stock-Based Compensation',       field: 'stockBasedCompensation' },
     { label: 'Changes in Working Capital',     field: 'changesInWorkingCapital' },
     { label: 'Other Operating Activities',     field: 'otherOperatingActivities' },
@@ -457,6 +506,35 @@ export class FinancialDataComponent implements OnInit {
     } finally {
       this.loading.set(false);
     }
+  }
+
+  // ── Extended metrics helpers ──────────────────────────────────────────────────
+
+  private parseExt(raw: Record<string, number | string | null> | string | null): Record<string, number | string | null> | null {
+    if (!raw) return null;
+    if (typeof raw === 'string') {
+      try { return JSON.parse(raw); } catch { return null; }
+    }
+    return raw;
+  }
+
+  extKeys(rows: { extendedMetrics: Record<string, number | string | null> | null }[]): string[] {
+    const keys = new Set<string>();
+    for (const r of rows) {
+      const ext = this.parseExt(r.extendedMetrics as any);
+      if (ext) Object.keys(ext).forEach(k => keys.add(k));
+    }
+    return [...keys].sort();
+  }
+
+  extVal(rows: { fiscalYear: number; extendedMetrics: Record<string, number | string | null> | null }[], year: number, key: string): number | string | null {
+    const rec = rows.find(r => r.fiscalYear === year);
+    const ext = this.parseExt(rec?.extendedMetrics as any);
+    return ext?.[key] ?? null;
+  }
+
+  camelToLabel(key: string): string {
+    return key.replace(/([A-Z])/g, ' $1').replace(/^./, s => s.toUpperCase());
   }
 
   // ── Value accessors ──────────────────────────────────────────────────────────

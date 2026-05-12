@@ -37,6 +37,7 @@ export interface BalanceSheetRecord {
   debtToEquity: string | null;
   currentRatio: string | null;
   bookValuePerShare: string | null;
+  extendedMetrics: Record<string, number | string | null> | null;
 }
 
 export interface IncomeStatementRecord {
@@ -72,6 +73,7 @@ export interface IncomeStatementRecord {
   ebitda: number | null;
   adjustedNetIncome: number | null;
   adjustedEps: string | null;
+  extendedMetrics: Record<string, number | string | null> | null;
 }
 
 export interface CashFlowRecord {
@@ -101,6 +103,7 @@ export interface CashFlowRecord {
   netCashFromFinancing: number | null;
   netChangeInCash: number | null;
   freeCashFlow: number | null;
+  extendedMetrics: Record<string, number | string | null> | null;
 }
 
 export interface FinancialData {

@@ -22,6 +22,11 @@ export const routes: Routes = [
                            .then(m => m.ImporterComponent),
   },
   {
+    path:          'mapper',
+    loadComponent: () => import('./features/mapper/mapper.component')
+                           .then(m => m.MapperComponent),
+  },
+  {
     path:       '**',
     redirectTo: 'dashboard',
   },

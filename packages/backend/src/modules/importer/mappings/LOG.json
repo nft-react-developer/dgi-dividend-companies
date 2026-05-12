@@ -1,6 +1,110 @@
 {
   "ticker": "LOG",
   "sheets": {
+    "income": {
+      "sheetIndex": 1,
+      "labelColumn": "A",
+      "valueColumns": {
+        "2018": "B",
+        "2017": "C",
+        "2016": "D"
+      },
+      "fields": {
+        "revenue": {
+          "type": "direct",
+          "match": "Ingresos ordinarios",
+          "transform": "thousands"
+        },
+        "costOfRevenue": {
+          "type": "direct",
+          "match": "Aprovisionamientos",
+          "transform": "thousands"
+        },
+        "grossProfit": {
+          "type": "direct",
+          "match": "BENEFICIO BRUTO",
+          "transform": "thousands"
+        },
+        "sellingGeneralAdmin": {
+          "type": "calc",
+          "formula": "a + b + c",
+          "vars": {
+            "a": { "type": "direct", "match": "Coste de redes logísticas:", "transform": "thousands" },
+            "b": { "type": "direct", "match": "Gastos comerciales:", "transform": "thousands" },
+            "c": { "type": "direct", "match": "Gastos oficinas centrales:", "transform": "thousands" }
+          }
+        },
+        "researchAndDevelopment": {
+          "type": "direct",
+          "match": "Gastos de investigación",
+          "transform": "thousands"
+        },
+        "otherNonOperating": {
+          "type": "calc",
+          "formula": "a + b + c",
+          "vars": {
+            "a": { "type": "direct", "match": "Participación en resultados de empresas puestas en equivalencia", "transform": "thousands" },
+            "b": { "type": "direct", "match": "Resultado neto de la enajenación y deterioro de activos no corrientes", "transform": "thousands" },
+            "c": { "type": "direct", "match": "Otros resultados", "transform": "thousands" }
+          }
+        },
+        "operatingIncome": {
+          "type": "direct",
+          "match": "BENEFICIO DE EXPLOTACIÓN",
+          "transform": "thousands"
+        },
+        "interestIncome": {
+          "type": "direct",
+          "match": "Ingresos financieros",
+          "transform": "thousands"
+        },
+        "interestExpense": {
+          "type": "direct",
+          "match": "Gastos financieros",
+          "transform": "thousands"
+        },
+        "pretaxIncome": {
+          "type": "direct",
+          "match": "BENEFICIO ANTES DE IMPUESTOS",
+          "transform": "thousands"
+        },
+        "incomeTax": {
+          "type": "direct",
+          "match": "Impuesto sobre Sociedades",
+          "transform": "thousands"
+        },
+        "netIncomeTotal": {
+          "type": "direct",
+          "match": "BENEFICIO DEL EJERCICIO",
+          "transform": "thousands"
+        },
+        "netIncome": {
+          "type": "direct",
+          "match": "Accionistas de la Sociedad Dominante",
+          "transform": "thousands"
+        },
+        "minorityInterest": {
+          "type": "direct",
+          "match": "Intereses minoritarios",
+          "transform": "thousands"
+        },
+        "epsBasic": {
+          "type": "direct",
+          "match": "BENEFICIO BÁSICO POR ACCIÓN",
+          "transform": "none"
+        },
+        "ebitda": {
+          "type": "direct",
+          "match": "Ebitda",
+          "transform": "thousands"
+        },
+        "dividendPerShare": {
+          "type": "direct",
+          "match": "Dividendo por accion",
+          "transform": "none"
+        }
+      }
+    },
     "balance": {
       "sheetIndex": 0,
       "labelColumn": "A",
@@ -298,6 +402,11 @@
             "d": { "type": "direct", "match": "Aumento/(Disminución) de otros pasivos corrientes", "transform": "thousands" },
             "e": { "type": "direct", "match": "Aumento/(Disminución) de otros pasivos no corrientes", "transform": "thousands" }
           }
+        },
+        "netCashFromOperations": {
+          "type": "direct",
+          "match": "ACTIVIDADES DE EXPLOTACIÓN:",
+          "transform": "thousands"
         },
 
         "acquisitions": {

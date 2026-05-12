@@ -13,6 +13,11 @@ function resolveRow(
   aliases: string[] = []
 ): Record<string, any> | undefined {
   const candidates = [match, ...aliases].map(s => s.toLowerCase().trim())
+  const exact = rows.find(row => {
+    const label = String(row[labelCol] ?? '').toLowerCase().trim()
+    return candidates.some(c => label === c)
+  })
+  if (exact) return exact
   return rows.find(row => {
     const label = String(row[labelCol] ?? '').toLowerCase().trim()
     if (!label) return false
@@ -20,14 +25,24 @@ function resolveRow(
   })
 }
 
+function parseAccountingValue(v: any): number {
+  const s = String(v ?? '').trim().replace(/,/g, '')
+  if (s.startsWith('(') && s.endsWith(')')) return -parseFloat(s.slice(1, -1))
+  return parseFloat(s)
+}
+
 function resolveValue(
   row: Record<string, any> | undefined,
   col: string,
-  transform?: string
+  transform?: string,
+  debugLabel?: string
 ): number | null {
   if (!row) return null
   const v = row[col]
-  const n = parseFloat(String(v).replace(/,/g, ''))
+  const n = parseAccountingValue(v)
+  if (debugLabel) {
+    console.log(`[mapper:raw] ${debugLabel} col=${col} raw=${JSON.stringify(v)} typeof=${typeof v} parsed=${n}`)
+  }
   if (isNaN(n)) return null
   if (transform === 'thousands')  return Math.round(n * 1_000)
   if (transform === 'millions')   return Math.round(n * 1_000_000)
@@ -53,7 +68,7 @@ export function applyMapping(
     debug(`Section "${section}" — ${rows.length} rows, fields: ${Object.keys(config.fields).join(', ')}`)
 
     for (const [fieldName, fieldDef] of Object.entries(config.fields)) {
-      const resolved = resolveFieldAllYears(fieldDef, rows, config.labelColumn, config.valueColumns)
+      const resolved = resolveFieldAllYears(fieldDef, rows, config.labelColumn, config.valueColumns, fieldName)
 
       for (const [year, value] of Object.entries(resolved)) {
         if (!yearSets[year]) yearSets[year] = {}
@@ -81,12 +96,18 @@ function resolveFieldAllYears(
   fieldDef: FieldDef,
   rows: Record<string, any>[],
   labelCol: string,
-  valueCols: Record<string, string>
+  valueCols: Record<string, string>,
+  fieldName?: string
 ): Record<string, number | null> {
   if (fieldDef.type === 'direct') {
     const row = resolveRow(rows, labelCol, fieldDef.match, fieldDef.aliases)
+    const isTarget = fieldName === 'dividendsPaid'
+    if (isTarget) {
+      console.log(`[mapper:debug] dividendsPaid — row found=${!!row} match="${fieldDef.match}"`)
+      if (row) console.log(`[mapper:debug] dividendsPaid — full row:`, JSON.stringify(row))
+    }
     return Object.fromEntries(
-      Object.entries(valueCols).map(([year, col]) => [year, resolveValue(row, col, fieldDef.transform)])
+      Object.entries(valueCols).map(([year, col]) => [year, resolveValue(row, col, fieldDef.transform, isTarget ? `dividendsPaid[${year}]` : undefined)])
     )
   }
 

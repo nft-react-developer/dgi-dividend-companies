@@ -8,6 +8,51 @@ import type { NewBalanceSheet } from '../../db/schema/balance-sheet.schema';
 import type { NewCashFlowStatement } from '../../db/schema/cash-flow.schema';
 import type { MappedRecord } from './types/mapping.types';
 
+const INCOME_SCHEMA_FIELDS = new Set([
+  'fiscalYear', 'currency', 'revenue', 'revenueGrowthPct', 'costOfRevenue',
+  'grossProfit', 'grossMarginPct', 'researchAndDevelopment', 'sellingGeneralAdmin',
+  'depreciationAmortization', 'otherOperatingExpenses', 'operatingIncome',
+  'operatingMarginPct', 'interestExpense', 'interestIncome', 'otherNonOperating',
+  'pretaxIncome', 'incomeTax', 'effectiveTaxRatePct', 'netIncome', 'minorityInterest',
+  'netIncomeTotal', 'netMarginPct', 'sharesBasic', 'sharesDiluted', 'epsBasic',
+  'epsDiluted', 'ebitda', 'adjustedNetIncome', 'adjustedEps',
+]);
+
+const BALANCE_SCHEMA_FIELDS = new Set([
+  'fiscalYear', 'currency', 'cashAndEquivalents', 'shortTermInvestments',
+  'accountsReceivable', 'inventory', 'otherCurrentAssets', 'totalCurrentAssets',
+  'propertyPlantEquipmentNet', 'goodwill', 'intangibleAssets', 'longTermInvestments',
+  'otherNonCurrentAssets', 'totalNonCurrentAssets', 'totalAssets', 'accountsPayable',
+  'shortTermDebt', 'currentPortionLongTermDebt', 'otherCurrentLiabilities',
+  'totalCurrentLiabilities', 'longTermDebt', 'deferredTaxLiabilities',
+  'otherNonCurrentLiabilities', 'totalNonCurrentLiabilities', 'totalLiabilities',
+  'commonStock', 'retainedEarnings', 'additionalPaidInCapital', 'treasuryStock',
+  'accumulatedOtherComprehensiveIncome', 'totalEquity', 'totalLiabilitiesAndEquity',
+]);
+
+const CASHFLOW_SCHEMA_FIELDS = new Set([
+  'fiscalYear', 'currency', 'netIncome', 'depreciationAmortization',
+  'stockBasedCompensation', 'changesInWorkingCapital', 'otherOperatingActivities',
+  'netCashFromOperations', 'capitalExpenditures', 'acquisitions',
+  'purchasesOfInvestments', 'salesOfInvestments', 'otherInvestingActivities',
+  'netCashFromInvesting', 'debtRepayment', 'issuanceOfDebt', 'issuanceOfStock',
+  'repurchaseOfStock', 'dividendsPaid', 'otherFinancingActivities',
+  'netCashFromFinancing', 'netChangeInCash', 'freeCashFlow',
+]);
+
+function collectExtended(
+  record: Record<string, number | null | undefined | string>,
+  schemaFields: Set<string>,
+): Record<string, number | null> | null {
+  const ext: Record<string, number | null> = {};
+  for (const [key, val] of Object.entries(record)) {
+    if (!schemaFields.has(key) && typeof val !== 'string') {
+      ext[key] = val as number | null;
+    }
+  }
+  return Object.keys(ext).length ? ext : null;
+}
+
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
 async function resolveCompanyId(ticker: string): Promise<number> {
@@ -54,6 +99,8 @@ async function upsertIncomeStatement(
     )
     .limit(1);
 
+  const r = record as Record<string, number | null | undefined | string>;
+
   const values: NewIncomeStatement = {
     companyId,
     fiscalYear:               record.fiscalYear,
@@ -80,6 +127,7 @@ async function upsertIncomeStatement(
     epsBasic:                 toDecimal(record.epsBasic),
     epsDiluted:               toDecimal(record.epsDiluted),
     ebitda:                   toBigint(record.ebitda),
+    extendedMetrics:          collectExtended(r, INCOME_SCHEMA_FIELDS),
     sourceFile:               sourceFile ?? null,
   };
 
@@ -114,6 +162,7 @@ async function upsertBalanceSheet(
     .limit(1);
 
   const r = record as Record<string, number | null | undefined | string>;
+  const balanceExtended = collectExtended(r, BALANCE_SCHEMA_FIELDS);
 
   const values: NewBalanceSheet = {
     companyId,
@@ -150,6 +199,7 @@ async function upsertBalanceSheet(
     accumulatedOtherComprehensiveIncome: toBigint(r.accumulatedOtherComprehensiveIncome as number),
     totalEquity:                      toBigint(r.totalEquity as number),
     totalLiabilitiesAndEquity:        toBigint(r.totalLiabilitiesAndEquity as number),
+    extendedMetrics:                  balanceExtended,
     sourceFile:                       sourceFile ?? null,
   };
 
@@ -185,12 +235,6 @@ async function upsertCashFlow(
 
   const r = record as Record<string, number | null | undefined | string>;
 
-  const extendedKeys = ['evEbitda', 'perAverage', 'perMin', 'payout', 'capexMaintenance', 'capexMaintenanceInvestment'];
-  const extendedMetrics: Record<string, number | null> = {};
-  for (const key of extendedKeys) {
-    if (r[key] !== undefined) extendedMetrics[key] = r[key] as number | null;
-  }
-
   const values: NewCashFlowStatement = {
     companyId,
     fiscalYear:               record.fiscalYear,
@@ -209,7 +253,7 @@ async function upsertCashFlow(
     debtRepayment:            toBigint(r.debtRepayment as number),
     issuanceOfDebt:           toBigint(r.issuanceOfDebt as number),
     netChangeInCash:          toBigint(r.netChangeInCash as number),
-    extendedMetrics:          Object.keys(extendedMetrics).length ? extendedMetrics : null,
+    extendedMetrics:          collectExtended(r, CASHFLOW_SCHEMA_FIELDS),
     sourceFile:               sourceFile ?? null,
   };
 
