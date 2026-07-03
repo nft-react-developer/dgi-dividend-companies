@@ -140,3 +140,4 @@ vite.config.ts.timestamp-*
 packages/frontend/.angular
 .claude/settings.json
 .vscode/launch.json
+tmp/pdf*
