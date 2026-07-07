@@ -2,6 +2,7 @@ import { z } from 'zod';
 
 const statementTypeEnum = z.enum(['income_statement', 'balance_sheet', 'cash_flow', 'dividends']);
 const transformEnum     = z.enum(['none', 'negate', 'abs', 'thousands', 'millions', 'pct_to_decimal']);
+const displayFormatEnum = z.enum(['currency', 'pct', 'ratio', 'shares']);
 
 export const createMapperDto = z.object({
   companyId:      z.number().int().positive().nullable().optional(),
@@ -11,6 +12,7 @@ export const createMapperDto = z.object({
   targetTable:    z.string().min(1).max(50),
   targetColumn:   z.string().min(1).max(100),
   transform:      transformEnum.default('none'),
+  displayFormat:  displayFormatEnum.default('currency'),
   priority:       z.number().int().min(0).max(127).default(10),
   isActive:       z.boolean().default(true),
   notes:          z.string().max(255).optional(),

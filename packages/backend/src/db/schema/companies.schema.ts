@@ -13,7 +13,8 @@ export const companies = mysqlTable(
   'companies',
   {
     id:            int('id').autoincrement().primaryKey(),
-    ticker:        varchar('ticker',   { length: 12  }).notNull(),
+    ticker:        varchar('ticker',       { length: 12  }).notNull(),
+    tickerYahoo:   varchar('ticker_yahoo', { length: 20  }),
     isin:          varchar('isin',     { length: 12  }),
     name:          varchar('name',     { length: 150 }).notNull(),
     sectorId:      tinyint('sector_id').notNull().references(() => sectors.id),
@@ -29,7 +30,8 @@ export const companies = mysqlTable(
     updatedAt:     timestamp('updated_at').defaultNow().onUpdateNow(),
   },
   (table) => ({
-    tickerIdx: index('idx_companies_ticker').on(table.ticker),
+    tickerIdx:      index('idx_companies_ticker').on(table.ticker),
+    tickerYahooIdx: index('idx_companies_ticker_yahoo').on(table.tickerYahoo),
     isinIdx:   index('idx_companies_isin').on(table.isin),
   })
 );

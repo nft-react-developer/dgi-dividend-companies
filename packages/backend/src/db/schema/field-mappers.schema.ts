@@ -19,6 +19,9 @@ export const fieldMappers = mysqlTable(
     transform:      mysqlEnum('transform', [
                       'none', 'negate', 'abs', 'thousands', 'millions', 'pct_to_decimal'
                     ]).notNull().default('none'),
+    displayFormat:  mysqlEnum('display_format', [
+                      'currency', 'pct', 'ratio', 'shares'
+                    ]).notNull().default('currency'),
     priority:       tinyint('priority').notNull().default(10),
     isActive:       boolean('is_active').notNull().default(true),
     notes:          varchar('notes', { length: 255 }),

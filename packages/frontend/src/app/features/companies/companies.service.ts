@@ -24,7 +24,8 @@ export class CompaniesService {
     if (f.search)
       list = list.filter(c =>
         c.name.toLowerCase().includes(f.search!.toLowerCase()) ||
-        c.ticker.toLowerCase().includes(f.search!.toLowerCase())
+        c.ticker.toLowerCase().includes(f.search!.toLowerCase()) ||
+        (c.tickerYahoo?.toLowerCase().includes(f.search!.toLowerCase()) ?? false)
       );
 
     if (f.sector)

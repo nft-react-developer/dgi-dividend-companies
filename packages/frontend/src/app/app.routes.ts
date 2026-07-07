@@ -17,6 +17,11 @@ export const routes: Routes = [
                            .then(m => m.CompaniesComponent),
   },
   {
+    path:          'weiss-chart',
+    loadComponent: () => import('./features/weiss-chart/weiss-chart-page.component')
+                           .then(m => m.WeissChartPageComponent),
+  },
+  {
     path:          'importer',
     loadComponent: () => import('./features/importer/importer.component')
                            .then(m => m.ImporterComponent),

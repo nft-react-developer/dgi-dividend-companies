@@ -6,6 +6,7 @@ import type { CreateCompanyDto, UpdateCompanyDto, CompanyQueryDto } from './comp
 const companySelect = {
   id:            schema.companies.id,
   ticker:        schema.companies.ticker,
+  tickerYahoo:   schema.companies.tickerYahoo,
   isin:          schema.companies.isin,
   name:          schema.companies.name,
   industry:      schema.companies.industry,
@@ -55,7 +56,11 @@ export async function findCompanyByTicker(ticker: string) {
   const db   = await getDb();
   if (!db) throw new Error('Database connection not available');
   const rows = await db
-    .select({ id: schema.companies.id, ticker: schema.companies.ticker })
+    .select({
+      id:          schema.companies.id,
+      ticker:      schema.companies.ticker,
+      tickerYahoo: schema.companies.tickerYahoo,
+    })
     .from(schema.companies)
     .where(eq(schema.companies.ticker, ticker.toUpperCase()))
     .limit(1);

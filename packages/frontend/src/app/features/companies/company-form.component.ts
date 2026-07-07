@@ -31,17 +31,21 @@ import { COUNTRIES } from '../../shared/data/countries.data';
 
       <form [formGroup]="form" class="form-grid">
 
-        <!-- Ticker + ISIN -->
+        <!-- Ticker + Yahoo ticker -->
         <div class="field">
           <label>Ticker *</label>
           <input pInputText formControlName="ticker" placeholder="JNJ" class="w-full" />
         </div>
         <div class="field">
+          <label>Yahoo ticker</label>
+          <input pInputText formControlName="tickerYahoo" placeholder="JNJ" class="w-full" />
+        </div>
+
+        <!-- ISIN + Name -->
+        <div class="field">
           <label>ISIN</label>
           <input pInputText formControlName="isin" placeholder="US4592001014" class="w-full" />
         </div>
-
-        <!-- Name -->
         <div class="field full">
           <label>Company name *</label>
           <input pInputText formControlName="name" placeholder="Johnson & Johnson" class="w-full" />
@@ -160,6 +164,7 @@ export class CompanyFormComponent implements OnInit {
 
   form = this.fb.group({
     ticker:        ['', [Validators.required, Validators.maxLength(12)]],
+    tickerYahoo:   ['', Validators.maxLength(20)],
     isin:          [''],
     name:          ['', Validators.required],
     sectorId:      [null as number | null, Validators.required],
@@ -189,9 +194,10 @@ export class CompanyFormComponent implements OnInit {
     const val = this.form.getRawValue();
     this.submitted.emit({
       ...val,
-      ticker:     val.ticker?.toUpperCase(),
-      countryIso: val.countryIso?.toUpperCase(),
-      currency:   val.currency?.toUpperCase(),
+      ticker:      val.ticker?.toUpperCase(),
+      tickerYahoo: val.tickerYahoo ? val.tickerYahoo.toUpperCase() : null,
+      countryIso:  val.countryIso?.toUpperCase(),
+      currency:    val.currency?.toUpperCase(),
     });
   }
 }

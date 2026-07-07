@@ -13,6 +13,7 @@ const mapperSelect = {
   targetTable:    schema.fieldMappers.targetTable,
   targetColumn:   schema.fieldMappers.targetColumn,
   transform:      schema.fieldMappers.transform,
+  displayFormat:  schema.fieldMappers.displayFormat,
   priority:       schema.fieldMappers.priority,
   isActive:       schema.fieldMappers.isActive,
   notes:          schema.fieldMappers.notes,

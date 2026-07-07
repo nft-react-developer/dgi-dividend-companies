@@ -8,7 +8,7 @@ import { CheckboxModule }  from 'primeng/checkbox';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { CompaniesService } from '../companies/companies.service';
 import type { FieldMapper } from './mapper.model';
-import { STATEMENT_TYPES, TRANSFORM_TYPES } from './mapper.model';
+import { STATEMENT_TYPES, TRANSFORM_TYPES, DISPLAY_FORMAT_TYPES } from './mapper.model';
 
 @Component({
   selector:   'app-mapper-form',
@@ -67,6 +67,17 @@ import { STATEMENT_TYPES, TRANSFORM_TYPES } from './mapper.model';
           <p-select
             formControlName="transform"
             [options]="transformTypes"
+            optionLabel="label"
+            optionValue="value"
+            class="w-full" />
+        </div>
+
+        <!-- Display format -->
+        <div class="field">
+          <label>Display format</label>
+          <p-select
+            formControlName="displayFormat"
+            [options]="displayFormats"
             optionLabel="label"
             optionValue="value"
             class="w-full" />
@@ -153,6 +164,7 @@ export class MapperFormComponent implements OnInit {
 
   statementTypes = STATEMENT_TYPES;
   transformTypes = TRANSFORM_TYPES;
+  displayFormats = DISPLAY_FORMAT_TYPES;
 
   form = this.fb.group({
     companyId:      [null as number | null],
@@ -162,6 +174,7 @@ export class MapperFormComponent implements OnInit {
     targetTable:    ['', Validators.required],
     targetColumn:   ['', Validators.required],
     transform:      ['none' as any],
+    displayFormat:  ['currency' as any],
     priority:       [10],
     isActive:       [true],
     notes:          [''],

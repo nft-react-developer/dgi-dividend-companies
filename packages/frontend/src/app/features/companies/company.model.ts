@@ -1,6 +1,7 @@
 export interface Company {
   id:            number;
   ticker:        string;
+  tickerYahoo?:   string | null;
   isin?:         string;
   name:          string;
   sectorId:      number;
@@ -25,6 +26,7 @@ export interface CompanyFilters {
 
 export interface CreateCompanyPayload {
   ticker:        string;
+  tickerYahoo?:   string | null;
   isin?:         string;
   name:          string;
   sectorId:      number;

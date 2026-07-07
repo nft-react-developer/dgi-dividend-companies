@@ -1,7 +1,13 @@
 import { z } from 'zod';
 
+const optionalUpperString = (max: number) => z.preprocess(
+  v => typeof v === 'string' && v.trim() === '' ? null : v,
+  z.string().trim().min(1).max(max).toUpperCase().nullable().optional(),
+);
+
 export const createCompanyDto = z.object({
   ticker:        z.string().min(1).max(12).toUpperCase(),
+  tickerYahoo:   optionalUpperString(20),
   isin:          z.string().length(12).optional(),
   name:          z.string().min(1).max(150),
   sectorId:      z.number().int().positive(),

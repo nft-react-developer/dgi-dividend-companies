@@ -119,7 +119,7 @@ interface RowDef {
                             <td class="label-col">{{ camelToLabel(key) }}</td>
                             @for (y of years(); track y) {
                               <td [class.negative]="isNeg(extVal(d.balance, y, key))">
-                                {{ fmt(extVal(d.balance, y, key)) }}
+                                {{ fmt(extVal(d.balance, y, key), extFmt('balance', key)) }}
                               </td>
                             }
                           </tr>
@@ -169,7 +169,7 @@ interface RowDef {
                             <td class="label-col">{{ camelToLabel(key) }}</td>
                             @for (y of years(); track y) {
                               <td [class.negative]="isNeg(extVal(d.income, y, key))">
-                                {{ fmt(extVal(d.income, y, key)) }}
+                                {{ fmt(extVal(d.income, y, key), extFmt('income', key)) }}
                               </td>
                             }
                           </tr>
@@ -219,7 +219,7 @@ interface RowDef {
                             <td class="label-col">{{ camelToLabel(key) }}</td>
                             @for (y of years(); track y) {
                               <td [class.negative]="isNeg(extVal(d.cashflow, y, key))">
-                                {{ fmt(extVal(d.cashflow, y, key)) }}
+                                {{ fmt(extVal(d.cashflow, y, key), extFmt('cashflow', key)) }}
                               </td>
                             }
                           </tr>
@@ -375,9 +375,17 @@ export class FinancialDataComponent implements OnInit {
     return [...all].sort((a, b) => b - a);
   });
 
-  balanceExtKeys = computed(() => this.extKeys(this.data()?.balance ?? []));
-  incomeExtKeys  = computed(() => this.extKeys(this.data()?.income  ?? []));
+  balanceExtKeys  = computed(() => this.extKeys(this.data()?.balance  ?? []));
+  incomeExtKeys   = computed(() => this.extKeys(this.data()?.income   ?? []));
   cashflowExtKeys = computed(() => this.extKeys(this.data()?.cashflow ?? []));
+
+  private extHints = computed(() => this.data()?.formatHints ?? {
+    balance: {}, income: {}, cashflow: {},
+  });
+
+  extFmt(sheet: 'balance' | 'income' | 'cashflow', key: string): 'currency' | 'pct' | 'shares' | 'ratio' | undefined {
+    return (this.extHints()[sheet] as Record<string, any>)[key];
+  }
 
   // ── Row definitions ──────────────────────────────────────────────────────────
 

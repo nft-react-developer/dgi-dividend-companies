@@ -106,8 +106,15 @@ export interface CashFlowRecord {
   extendedMetrics: Record<string, number | string | null> | null;
 }
 
+export type DisplayFormat = 'currency' | 'pct' | 'ratio' | 'shares';
+
 export interface FinancialData {
-  balance: BalanceSheetRecord[];
-  income: IncomeStatementRecord[];
+  balance:  BalanceSheetRecord[];
+  income:   IncomeStatementRecord[];
   cashflow: CashFlowRecord[];
+  formatHints: {
+    balance:  Record<string, DisplayFormat>;
+    income:   Record<string, DisplayFormat>;
+    cashflow: Record<string, DisplayFormat>;
+  };
 }
